@@ -22,10 +22,9 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
     super.dispose();
   }
   Map<String, Widget> map = {
-    "login": Text("Login"),
-    "signup": Text("SignUp"),
+    "login": const Text("Login"),
+    "signup": const Text("SignUp"),
   };
-  List<bool> _isSelected = [true, false];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,19 +79,19 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
             height: MediaQuery.of(context).size.height*0.02,
           ),
           TabBar(
-            labelColor: Color(0xFFB51843),
-              unselectedLabelColor: Color(0xff272727),
-              labelStyle: TextStyle(
+            labelColor: const Color(0xFFB51843),
+              unselectedLabelColor: const Color(0xff272727),
+              labelStyle: const TextStyle(
                 fontWeight: FontWeight.w600
               ),
-              indicatorColor: Color(0xFFB51843),
+              indicatorColor: const Color(0xFFB51843),
               tabs: [
-                Tab(text: "Login",),
-                Tab(text: "Sign Up",),
+                const Tab(text: "Login",),
+                const Tab(text: "Sign Up",),
               ],
             controller: _tabController,
           ),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           Expanded(
             child: TabBarView(
               children: [

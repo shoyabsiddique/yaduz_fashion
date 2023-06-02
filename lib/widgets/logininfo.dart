@@ -1,18 +1,19 @@
+import 'package:firstapp/controller/logincontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
-class LoginInfo extends StatefulWidget {
-  const LoginInfo({Key? key}) : super(key: key);
+class LoginInfo extends StatelessWidget {
+  LoginInfo({Key? key}) : super(key: key);
 
-  @override
-  State<LoginInfo> createState() => _LoginInfoState();
-}
-
-class _LoginInfoState extends State<LoginInfo> {
   final _emailController = TextEditingController();
+
   final _passController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  bool obsVal = true;
+
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final LoginController controller = Get.put(LoginController());
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -47,29 +48,27 @@ class _LoginInfoState extends State<LoginInfo> {
                     ? 'Enter a valid email address'
                     : null;
               },
-              autovalidateMode: AutovalidateMode.always,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: _emailController,
             ),
             const SizedBox(height: 20,),
-            TextFormField(
-              obscureText: obsVal,
+            Obx(() => TextFormField(
+              obscureText: controller.obsVal.value,
               decoration: InputDecoration(
                 hintText: "Enter Your Password",
                   prefixIcon: SvgPicture.asset("assets/images/Icon.svg", fit: BoxFit.scaleDown,),
                   suffixIcon: IconButton(
                     onPressed: (){
-                      setState(() {
-                        obsVal = ! obsVal;
-                      });
+                      controller.updateObs();
                       },
-                    icon: obsVal ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
+                    icon: controller.obsVal.value ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
                   ),
                   border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                 )
               ),
               keyboardType: TextInputType.visiblePassword,
-              autovalidateMode: AutovalidateMode.always,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: _passController,
               validator: (input) {
                 RegExp regex =
@@ -86,6 +85,7 @@ class _LoginInfoState extends State<LoginInfo> {
                 }
               },
             ),
+            ),
             const SizedBox(height: 10,),
             Container(
               alignment: Alignment.centerRight,
@@ -101,15 +101,53 @@ class _LoginInfoState extends State<LoginInfo> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               height: 50,
-              child: TextButton(onPressed: (){
+              child: TextButton(onPressed: () async {
                 if(_formKey.currentState!.validate()){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Email: ${_emailController.text} Password: ${_passController.text}")),
-                  );
+                  /*Get.snackbar("It Works", "Email: ${_emailController.text} Password: ${_passController.text}",
+                    snackPosition: SnackPosition.BOTTOM,
+                    snackStyle: SnackStyle.FLOATING,
+                    isDismissible: true,
+                    icon: const Icon(Icons.leaderboard),
+                    shouldIconPulse: true,
+                    showProgressIndicator: true,
+                    backgroundGradient: const LinearGradient(colors: [Colors.amber, Colors.green]),
+                    dismissDirection: DismissDirection.vertical,
+                    forwardAnimationCurve: Curves.easeInOutCubicEmphasized,
+                    mainButton: TextButton(onPressed: (){}, child: const Text("Retry")),
+                  );*/
+                  /*Get.bottomSheet(
+                    Wrap(
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.light_mode),
+                          title: const Text("Light Theme"),
+                          onTap: (){
+                            // Get.changeTheme(ThemeData.light());
+                            Get.changeThemeMode(ThemeMode.light);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.dark_mode),
+                          title: const Text("Dark Theme"),
+                          onTap: (){
+                            // Get.changeTheme(ThemeData.dark());
+                            Get.changeThemeMode(ThemeMode.dark);
+                          },
+                        ),
+                      ],
+                    )
+                  );*/
+                  Get.toNamed('/home', arguments: ["data", "data1", "data2"]);
+                  // var data = await Get.to(HomePage());
+                  // Get.defaultDialog(
+                  //   title: "Alert Data Recieved",
+                  //   middleText: data
+                  // );
                 }
                 else{
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Please Input Data")),
+                  Get.snackbar(
+                    "Error",
+                      "Please Input Data"
                   );
                 }
               }, style: TextButton.styleFrom(
